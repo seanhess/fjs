@@ -2,8 +2,12 @@
   "author": "Sean Hess <sean@i.tv> (http://seanhess.github.com)",
   "name": "functional",
   "description": "Utilities for Functional Javascript",
-  "version": "0.0.0",
+  "version": "0.0.1",
+
   "homepage": "http://github.com/idottv/functional",
+  "scripts": {
+    "test":"mocha test.js"
+  },
   "repository": {
     "type": "git",
     "url": "git@github.com:idottv/functional.git"
