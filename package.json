@@ -1,0 +1,17 @@
+{
+  "author": "Sean Hess <sean@i.tv> (http://seanhess.github.com)",
+  "name": "functional",
+  "description": "Utilities for Functional Javascript",
+  "version": "0.0.0",
+  "homepage": "http://github.com/idottv/functional",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:idottv/functional.git"
+  },
+  "engines": {
+    "node": "0.6.x"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {}
+}
