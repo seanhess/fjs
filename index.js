@@ -17,3 +17,4 @@ Function.prototype.partialr = function() {
         return f.apply(null, [x].concat(args))
     }
 }
+
