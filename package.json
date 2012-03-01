@@ -1,6 +1,6 @@
 {
   "author": "Sean Hess <sean@i.tv> (http://seanhess.github.com)",
-  "name": "functional-utils",
+  "name": "fjs",
   "description": "Utilities for Functional Javascript",
   "version": "0.0.2",
 
@@ -11,9 +11,6 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:idottv/functional.git"
-  },
-  "engines": {
-    "node": "0.6.x"
   },
   "dependencies": {},
   "devDependencies": {},
