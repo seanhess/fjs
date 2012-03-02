@@ -1,16 +1,11 @@
 
 // WARNING! // This adds a few methods to Function.prototype as soon as you require it
-// should I also allow you to pass in nulls to skip values? (or undefined)
-
-
-// I think it's much more likely you'll want to apply with holes than it is that you'll 
-// want to partially apply a null. You can always use undefined if you care :)
-
-// oh, wait, this is really bad. What if the VARIALBES are null
 
 exports._ = "fjs hole"
 
-Function.prototype.partial = function() {
+// pass exports._ into partial to mean "stick a variable here". Variables will fill those holes
+// or just apply left like normal
+function partial() {
     var f = this
     var args = Array.prototype.slice.call(arguments)
     return function() {
@@ -28,7 +23,7 @@ Function.prototype.partial = function() {
 }
 
 // don't wory about holes here
-Function.prototype.partialr = function() {
+function partialr() {
     var f = this
     var args = Array.prototype.slice.call(arguments)
     return function() {
@@ -36,3 +31,13 @@ Function.prototype.partialr = function() {
         return f.apply(null, innerArgs.concat(args))
     }
 }
+
+Object.defineProperty(Function.prototype, "partial", {
+    value: partial,
+    enumerable: false
+})
+
+Object.defineProperty(Function.prototype, "partialr", {
+    value: partialr,
+    enumerable: false
+})
