@@ -2,17 +2,19 @@
   "author": "Sean Hess <sean@i.tv> (http://seanhess.github.com)",
   "name": "fjs",
   "description": "Utilities for Functional Javascript",
-  "version": "0.0.4",
+  "version": "0.0.5",
 
   "homepage": "http://github.com/idottv/functional",
   "scripts": {
-    "test":"mocha test.js"
+    "test":"node_modules/.bin/mocha test.js"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:idottv/functional.git"
   },
   "dependencies": {},
-  "devDependencies": {},
+  "devDependencies": {
+    "mocha":"0.14.1"
+  },
   "optionalDependencies": {}
 }

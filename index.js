@@ -32,12 +32,15 @@ function partialr() {
     }
 }
 
-Object.defineProperty(Function.prototype, "partial", {
-    value: partial,
-    enumerable: false
-})
+// define on the prototype if it doesn't exist yet
+if (!Function.prototype.partial) {
+    Object.defineProperty(Function.prototype, "partial", {
+        value: partial,
+        enumerable: false
+    })
 
-Object.defineProperty(Function.prototype, "partialr", {
-    value: partialr,
-    enumerable: false
-})
+    Object.defineProperty(Function.prototype, "partialr", {
+        value: partialr,
+        enumerable: false
+    })
+}

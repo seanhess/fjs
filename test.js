@@ -4,7 +4,7 @@ var _ = f._
 
 describe('fjs', function() {
     describe("partial application", function() {
-
+        
         function add(a, b) {
             return a + b
         }
@@ -38,5 +38,6 @@ describe('fjs', function() {
             joinWithDot = joinSomeStrings.partial(_, ".", _)
             assert.equal(joinWithDot("a", "b"), "a.b")
         })
+
     })
 })
