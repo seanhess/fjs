@@ -33,7 +33,10 @@ function partialr() {
 }
 
 // define on the prototype if it doesn't exist yet
-if (!Function.prototype.partial) {
+// require the module like this: require('fjs').attachPrototype()
+exports.attachPrototype = function() {
+    if (Function.prototype.partial) return
+
     Object.defineProperty(Function.prototype, "partial", {
         value: partial,
         enumerable: false
@@ -43,4 +46,6 @@ if (!Function.prototype.partial) {
         value: partialr,
         enumerable: false
     })
+
+    return exports
 }

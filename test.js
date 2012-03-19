@@ -1,5 +1,5 @@
 var assert = require('assert')
-var f = require('./index')
+var f = require('./index').attachPrototype()
 var _ = f._
 
 describe('fjs', function() {
