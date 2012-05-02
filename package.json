@@ -5,8 +5,7 @@
   "version": "0.2.1",
   "homepage": "http://github.com/idottv/fjs",
   "scripts": {
-    "test":"node_modules/.bin/mocha --compilers coffee:coffee-script test.coffee",
-    "install":"node_modules/coffee-script/bin/coffee -c index.coffee"
+    "test":"node_modules/.bin/mocha --compilers coffee:coffee-script test.coffee"
   },
   "repository": {
     "type": "git",
