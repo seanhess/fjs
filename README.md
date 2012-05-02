@@ -1,6 +1,17 @@
-#### FJS: Functional Utils For Javascript
+### FJS: Functional Utils For Javascript
 
-partial, and partialr for javascript. 
+Functional Utilties for Javascript
 
-http://seanhess.github.com/2012/02/20/functional_javascript.html/
+#### Curry
+    curry = require('fjs').curry
+
+    add = curry (a, b) -> a + b
+    add2 = add(2)
+
+    assert.equal add(2,3), 5
+    assert.equal add2(3), 5
+    assert.equal add(2)(3), 5
+
+    assert.deepEqual [1,2,3].map(add(2)), [3,4,5]
+
 

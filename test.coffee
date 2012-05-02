@@ -1,3 +1,18 @@
+assert = require 'assert'
+{curry} = require './index'
+
+describe 'fjs', ->
+  describe 'curry', ->
+    it 'should curry sum', ->
+      add = curry (a, b) -> a + b
+      add2 = add(2)
+
+      assert.equal add(2,3), 5
+      assert.equal add2(3), 5
+
+###
+// Old JS Tests: tested partial and partialr
+
 var assert = require('assert')
 var f = require('./index').attachPrototype()
 var _ = f._
@@ -41,3 +56,4 @@ describe('fjs', function() {
 
     })
 })
+###
