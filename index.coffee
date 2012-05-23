@@ -116,6 +116,5 @@ if define?.amd?
 else if module?.exports?
   _ = require 'underscore'
   module.exports = fjs _
-  console.log "HI!"
 
 
