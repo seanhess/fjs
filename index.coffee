@@ -91,6 +91,9 @@ fjs = (_) ->
   groupBy = curry (iterator, list) -> _.groupBy list, iterator
   invoke  = curry (iterator, list) -> _.invoke list, iterator
 
+  indexOf = curry (value, list) -> _.indexOf list, value
+  sort    = (list) -> list.concat().sort()
+
   reduce  = curry (iterator, memo, list) -> _.reduce list, iterator, memo
 
   # first/head do NOT allow you to pass N, the number to grab. use "take" below instead
@@ -98,7 +101,7 @@ fjs = (_) ->
   last = _.last
   tail = rest = _.rest
 
-  us = {find, map, filter, reduce, memoize, compose, min, max, each, head, first, last, tail, rest, sortBy, groupBy, invoke}
+  us = {find, map, filter, reduce, memoize, compose, min, max, each, head, first, last, tail, rest, sortBy, groupBy, invoke, indexOf, sort}
 
 
 

@@ -4,7 +4,7 @@
     __slice = [].slice;
 
   fjs = function(_) {
-    var add, arrays, basics, call, compose, curry, debug, div, each, eq, filter, find, first, get, groupBy, gt, gte, head, invoke, last, log, lt, lte, map, max, memoize, min, mult, negate, objects, reduce, rest, reverse, set, sortBy, sub, tail, take, us;
+    var add, arrays, basics, call, compose, curry, debug, div, each, eq, filter, find, first, get, groupBy, gt, gte, head, indexOf, invoke, last, log, lt, lte, map, max, memoize, min, mult, negate, objects, reduce, rest, reverse, set, sort, sortBy, sub, tail, take, us;
     curry = function(f) {
       var call;
       return call = function() {
@@ -124,6 +124,12 @@
     invoke = curry(function(iterator, list) {
       return _.invoke(list, iterator);
     });
+    indexOf = curry(function(value, list) {
+      return _.indexOf(list, value);
+    });
+    sort = function(list) {
+      return list.concat().sort();
+    };
     reduce = curry(function(iterator, memo, list) {
       return _.reduce(list, iterator, memo);
     });
@@ -147,7 +153,9 @@
       rest: rest,
       sortBy: sortBy,
       groupBy: groupBy,
-      invoke: invoke
+      invoke: invoke,
+      indexOf: indexOf,
+      sort: sort
     };
     reverse = function(arr) {
       return arr.concat().reverse();
