@@ -84,17 +84,21 @@ fjs = (_) ->
   find    = curry (iterator, list) -> _.find list, iterator
   map     = curry (iterator, list) -> _.map list, iterator
   filter  = curry (iterator, list) -> _.filter list, iterator
-  reduce  = curry (iterator, list) -> _.reduce list, iterator
   each    = curry (iterator, list) -> _.each list, iterator
   min     = curry (iterator, list) -> _.min list, iterator
   max     = curry (iterator, list) -> _.max list, iterator
+  sortBy  = curry (iterator, list) -> _.sortBy list, iterator
+  groupBy = curry (iterator, list) -> _.groupBy list, iterator
+  invoke  = curry (iterator, list) -> _.invoke list, iterator
+
+  reduce  = curry (iterator, memo, list) -> _.reduce list, iterator, memo
 
   # first/head do NOT allow you to pass N, the number to grab. use "take" below instead
   head = first = _.first
   last = _.last
   tail = rest = _.rest
 
-  us = {find, map, filter, reduce, memoize, compose, min, max, each, head, first, last, tail, rest}
+  us = {find, map, filter, reduce, memoize, compose, min, max, each, head, first, last, tail, rest, sortBy, groupBy, invoke}
 
 
 

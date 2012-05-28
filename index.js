@@ -4,7 +4,7 @@
     __slice = [].slice;
 
   fjs = function(_) {
-    var add, arrays, basics, call, compose, curry, debug, div, each, eq, filter, find, first, get, gt, gte, head, last, log, lt, lte, map, max, memoize, min, mult, negate, objects, reduce, rest, reverse, set, sub, tail, take, us;
+    var add, arrays, basics, call, compose, curry, debug, div, each, eq, filter, find, first, get, groupBy, gt, gte, head, invoke, last, log, lt, lte, map, max, memoize, min, mult, negate, objects, reduce, rest, reverse, set, sortBy, sub, tail, take, us;
     curry = function(f) {
       var call;
       return call = function() {
@@ -106,9 +106,6 @@
     filter = curry(function(iterator, list) {
       return _.filter(list, iterator);
     });
-    reduce = curry(function(iterator, list) {
-      return _.reduce(list, iterator);
-    });
     each = curry(function(iterator, list) {
       return _.each(list, iterator);
     });
@@ -117,6 +114,18 @@
     });
     max = curry(function(iterator, list) {
       return _.max(list, iterator);
+    });
+    sortBy = curry(function(iterator, list) {
+      return _.sortBy(list, iterator);
+    });
+    groupBy = curry(function(iterator, list) {
+      return _.groupBy(list, iterator);
+    });
+    invoke = curry(function(iterator, list) {
+      return _.invoke(list, iterator);
+    });
+    reduce = curry(function(iterator, memo, list) {
+      return _.reduce(list, iterator, memo);
     });
     head = first = _.first;
     last = _.last;
@@ -135,7 +144,10 @@
       first: first,
       last: last,
       tail: tail,
-      rest: rest
+      rest: rest,
+      sortBy: sortBy,
+      groupBy: groupBy,
+      invoke: invoke
     };
     reverse = function(arr) {
       return arr.concat().reverse();
@@ -159,7 +171,6 @@
   } else if ((typeof module !== "undefined" && module !== null ? module.exports : void 0) != null) {
     _ = require('underscore');
     module.exports = fjs(_);
-    console.log("HI!");
   }
 
 }).call(this);
