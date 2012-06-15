@@ -14,9 +14,36 @@ fjs = (_) ->
         f args...
 
       # otherwise, return a function with the arguments partially applied
-      else (args2...) ->
-        innerArgs = args.concat(args2)
-        call innerArgs...
+      else
+        inner = (args2...) ->
+          innerArgs = args.concat(args2)
+          call innerArgs...
+        inner.name = f.name
+        inner.toString = -> f.toString()
+        return inner
+
+    call.name = f.name
+    call.toString = -> f.toString()
+    return call
+
+  # flips the arguments of a function
+  flip = (f) -> (args...) -> f(args.reverse()...)
+  id = (a) -> a
+
+  # turns a function that takes its context as the first parameter, and calls it with "this"
+  # useful for turning funcitonal functions into methods on an object
+  # kind of like the reverse of Function.prototype.call
+  method = (func) ->
+    (args...) ->
+      func(this, args...)
+
+
+  # like compose, but backwards. So the first method on the left is the 1st one called. 
+  # easier for most people to understand
+  chain = (funcs...) -> compose funcs.reverse()
+
+  functions = {curry, flip, id, method, chain}
+
 
   ## OBJECTS 
   # functional eqivalents to object-y stuff
@@ -42,7 +69,6 @@ fjs = (_) ->
       obj[name](args.concat(innerArgs)...)
 
   objects = {get, set, call}
-
 
   ## DEBUG
   log = (arg) ->
@@ -115,7 +141,7 @@ fjs = (_) ->
   arrays = {reverse, take}
 
   # export!
-  _.extend {curry}, objects, basics, us, arrays, debug
+  _.extend functions, objects, basics, us, arrays, debug
 
 if define?.amd?
   define(['underscore'], (_) -> fjs _)

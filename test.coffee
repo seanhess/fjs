@@ -18,6 +18,14 @@ describe 'fjs', ->
       assert.equal add(2,3), 5
       assert.equal add2(3), 5
 
+  describe 'method', ->
+    it 'should call something with this', ->
+      name = (obj) -> obj.name
+      henry = {name: "henry"}
+      henry.getName = fjs.method name
+      assert.equal henry.getName(), "henry"
+      
+
   describe 'call', ->
     it 'should call functions on the object', ->
       obj =
@@ -115,6 +123,16 @@ describe 'fjs', ->
       arr = [1,2,3]
       assert.deepEqual fjs.reverse(arr), [3,2,1]
       assert.deepEqual arr, [1,2,3]
+
+  describe 'find', ->
+    it 'should work with map on an empty array', ->
+      seeking = [2,3]
+      values = []
+      isValue = curry (target, value) -> value is target
+      findValue = curry (values, target) -> fjs.find isValue(target), values
+      found = fjs.map findValue(values), seeking
+      assert.deepEqual [undefined, undefined], found
+
 
 
 

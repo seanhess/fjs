@@ -4,23 +4,62 @@
     __slice = [].slice;
 
   fjs = function(_) {
-    var add, arrays, basics, call, compose, curry, debug, div, each, eq, filter, find, first, get, groupBy, gt, gte, head, indexOf, invoke, last, log, lt, lte, map, max, memoize, min, mult, negate, objects, reduce, rest, reverse, set, sort, sortBy, sub, tail, take, us;
+    var add, arrays, basics, call, chain, compose, curry, debug, div, each, eq, filter, find, first, flip, functions, get, groupBy, gt, gte, head, id, indexOf, invoke, last, log, lt, lte, map, max, memoize, method, min, mult, negate, objects, reduce, rest, reverse, set, sort, sortBy, sub, tail, take, us;
     curry = function(f) {
       var call;
-      return call = function() {
-        var args;
+      call = function() {
+        var args, inner;
         args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
         if (args.length >= f.length) {
           return f.apply(null, args);
         } else {
-          return function() {
+          inner = function() {
             var args2, innerArgs;
             args2 = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
             innerArgs = args.concat(args2);
             return call.apply(null, innerArgs);
           };
+          inner.name = f.name;
+          inner.toString = function() {
+            return f.toString();
+          };
+          return inner;
         }
       };
+      call.name = f.name;
+      call.toString = function() {
+        return f.toString();
+      };
+      return call;
+    };
+    flip = function(f) {
+      return function() {
+        var args;
+        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+        return f.apply(null, args.reverse());
+      };
+    };
+    id = function(a) {
+      return a;
+    };
+    method = function(func) {
+      return function() {
+        var args;
+        args = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+        return func.apply(null, [this].concat(__slice.call(args)));
+      };
+    };
+    chain = function() {
+      var funcs;
+      funcs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      return compose(funcs.reverse());
+    };
+    functions = {
+      curry: curry,
+      flip: flip,
+      id: id,
+      method: method,
+      chain: chain
     };
     get = curry(function(name, obj) {
       return obj[name];
@@ -167,9 +206,7 @@
       reverse: reverse,
       take: take
     };
-    return _.extend({
-      curry: curry
-    }, objects, basics, us, arrays, debug);
+    return _.extend(functions, objects, basics, us, arrays, debug);
   };
 
   if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
