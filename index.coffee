@@ -40,9 +40,44 @@ fjs = (_) ->
 
   # like compose, but backwards. So the first method on the left is the 1st one called. 
   # easier for most people to understand
-  chain = (funcs...) -> compose funcs.reverse()
+  chain = (funcs...) -> compose funcs.reverse()...
 
   functions = {curry, flip, id, method, chain}
+
+
+  ## ASYNC METHODS ################################################################
+  # uses async library, but functions don't require arrays
+  # also allows you to CREATE a series
+  makeSeries = (funcs...) ->
+    index = 0
+
+    callAsync = (func, args, cb) ->
+      func args..., (err, args...) ->
+        if err? then return cb err
+        nextInSeries args..., cb
+
+    callSync = (func, args, cb) ->
+      result = func args...
+      nextInSeries result, cb
+
+    nextInSeries = (args..., cb) ->
+      func = funcs[index++]
+      # console.log "CALLING", func?, args
+      if not func? then return cb null, args...
+
+      if func.length is args.length
+        callSync func, args, cb
+      else
+        callAsync func, args, cb
+
+  # make a series and call it immediately
+  # TODO is there a way to automatically detect this, like curry does?
+  # if the FIRST one has no remaining arguments required?
+  series = (funcs..., cb) ->
+    seriesChain = makeSeries funcs...
+    seriesChain cb
+
+  async = {series, makeSeries}
 
 
   ## OBJECTS 
@@ -141,7 +176,7 @@ fjs = (_) ->
   arrays = {reverse, take}
 
   # export!
-  _.extend functions, objects, basics, us, arrays, debug
+  _.extend functions, objects, basics, us, arrays, debug, async
 
 if define?.amd?
   define(['underscore'], (_) -> fjs _)

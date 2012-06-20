@@ -3,6 +3,7 @@
 # just a mocha test. Doesn't say how it's run
 
 assert = require 'assert'
+_ = require 'underscore'
 
 fjs = require './index'
 call = fjs.call
@@ -24,7 +25,73 @@ describe 'fjs', ->
       henry = {name: "henry"}
       henry.getName = fjs.method name
       assert.equal henry.getName(), "henry"
-      
+
+
+  describe 'chain', ->
+    it 'should work like compose', ->
+      first = (array) -> array[0]
+      name = (item) -> item.name
+
+      items = [{name: "sean"}]
+
+      composeValue = _.compose(name, first)(items)
+      assert.equal composeValue, "sean", "compose incorrect"
+
+      chainValue = fjs.chain(first, name)(items)
+      assert.equal chainValue, "sean", "chain incorrect"
+
+
+  describe 'series', ->
+    it 'should do multiple async methods', (done) ->
+      getData = (cb) -> process.nextTick -> cb null, "bob"
+      getDetails = (id, cb) -> process.nextTick -> cb null, {id: id, message: "hi " + id}
+
+      fjs.series getData, getDetails, (err, data) ->
+        assert.ifError err
+        assert.ok data
+        assert.equal data.id, "bob"
+        assert.equal data.message, "hi bob"
+        done()
+
+    it 'should handle sync methods', (done) ->
+      getData = () -> "bob"
+      getDetails = (id) -> {id: id, message: "hi " + id}
+
+      fjs.series getData, getDetails, (err, data) ->
+        assert.ifError err
+        assert.ok data
+        assert.equal data.id, "bob"
+        assert.equal data.message, "hi bob"
+        done()
+
+    it 'should escape early on errors', (done) ->
+      giveError = (cb) -> cb new Error "failed", {name: "woot"}
+      dontCall = (data, cb) ->
+        throw new Error "Should not have called this method"
+      fjs.series giveError, dontCall, (err, data) ->
+        assert.ok err
+        assert.ok !data
+        done()
+
+    it 'should work with curry', ->
+      asyncAdd = curry (n, num, cb) -> cb null, num+n
+      mult = curry (n, num) -> num*n
+      myMethod = fjs.series asyncAdd(2), mult(2), (err, num) ->
+        assert.ifError err
+        assert.equal num, 8
+        done()
+
+    it 'should behave like compose and let you make one for use later', (done) ->
+      getData = (cb) -> process.nextTick -> cb null, "bob"
+      getDetails = (id, cb) -> process.nextTick -> cb null, {id: id, message: "hi " + id}
+
+      getDataDetails = fjs.makeSeries getData, getDetails
+      getDataDetails (err, data) ->
+        assert.ifError err
+        assert.ok data
+        assert.equal data.id, "bob"
+        assert.equal data.message, "hi bob"
+        done()
 
   describe 'call', ->
     it 'should call functions on the object', ->

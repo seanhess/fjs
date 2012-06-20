@@ -4,7 +4,7 @@
     __slice = [].slice;
 
   fjs = function(_) {
-    var add, arrays, basics, call, chain, compose, curry, debug, div, each, eq, filter, find, first, flip, functions, get, groupBy, gt, gte, head, id, indexOf, invoke, last, log, lt, lte, map, max, memoize, method, min, mult, negate, objects, reduce, rest, reverse, set, sort, sortBy, sub, tail, take, us;
+    var add, arrays, async, basics, call, chain, compose, curry, debug, div, each, eq, filter, find, first, flip, functions, get, groupBy, gt, gte, head, id, indexOf, invoke, last, log, lt, lte, makeSeries, map, max, memoize, method, min, mult, negate, objects, reduce, rest, reverse, series, set, sort, sortBy, sub, tail, take, us;
     curry = function(f) {
       var call;
       call = function() {
@@ -52,7 +52,7 @@
     chain = function() {
       var funcs;
       funcs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      return compose(funcs.reverse());
+      return compose.apply(null, funcs.reverse());
     };
     functions = {
       curry: curry,
@@ -60,6 +60,49 @@
       id: id,
       method: method,
       chain: chain
+    };
+    makeSeries = function() {
+      var callAsync, callSync, funcs, index, nextInSeries;
+      funcs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      index = 0;
+      callAsync = function(func, args, cb) {
+        return func.apply(null, __slice.call(args).concat([function() {
+          var args, err;
+          err = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
+          if (err != null) {
+            return cb(err);
+          }
+          return nextInSeries.apply(null, __slice.call(args).concat([cb]));
+        }]));
+      };
+      callSync = function(func, args, cb) {
+        var result;
+        result = func.apply(null, args);
+        return nextInSeries(result, cb);
+      };
+      return nextInSeries = function() {
+        var args, cb, func, _i;
+        args = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), cb = arguments[_i++];
+        func = funcs[index++];
+        if (!(func != null)) {
+          return cb.apply(null, [null].concat(__slice.call(args)));
+        }
+        if (func.length === args.length) {
+          return callSync(func, args, cb);
+        } else {
+          return callAsync(func, args, cb);
+        }
+      };
+    };
+    series = function() {
+      var cb, funcs, seriesChain, _i;
+      funcs = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), cb = arguments[_i++];
+      seriesChain = makeSeries.apply(null, funcs);
+      return seriesChain(cb);
+    };
+    async = {
+      series: series,
+      makeSeries: makeSeries
     };
     get = curry(function(name, obj) {
       return obj[name];
@@ -206,7 +249,7 @@
       reverse: reverse,
       take: take
     };
-    return _.extend(functions, objects, basics, us, arrays, debug);
+    return _.extend(functions, objects, basics, us, arrays, debug, async);
   };
 
   if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
