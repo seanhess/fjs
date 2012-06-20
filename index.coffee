@@ -2,6 +2,9 @@
 # See README!
 
 fjs = (_) ->
+
+
+
   # CURRY makes a function so you can call it with fewer arguments
   # it will turn add = (a,b) -> a+b into add = (a) -> (b) -> a+b
   # so you can call #2 with add(2)(4)
@@ -37,12 +40,18 @@ fjs = (_) ->
     (args...) ->
       func(this, args...)
 
+  # custom compose. need to make sure it throws errors if a funciton is undefined
+  compose = (funcs...) ->
+    if anyUndefined funcs then throw new Error "null function in compose"
+    _.compose funcs...
 
   # like compose, but backwards. So the first method on the left is the 1st one called. 
   # easier for most people to understand
   chain = (funcs...) -> compose funcs.reverse()...
 
+
   functions = {curry, flip, id, method, chain}
+
 
 
   ## ASYNC METHODS ################################################################
@@ -50,6 +59,9 @@ fjs = (_) ->
   # also allows you to CREATE a series
   makeSeries = (funcs...) ->
     index = 0
+
+    if anyUndefined funcs then throw new Error "null function in series"
+
     nextInSeries = (args..., cb) ->
       func = funcs[index++]
       if not func? then return cb null, args...
@@ -61,7 +73,12 @@ fjs = (_) ->
   # TODO is there a way to automatically detect this, like curry does?
   # if the FIRST one has no remaining arguments required?
   series = (funcs..., cb) ->
-    seriesChain = makeSeries funcs...
+
+    try
+      seriesChain = makeSeries funcs...
+    catch err
+      return cb err
+
     seriesChain cb
 
   toAsync = (f) ->
@@ -126,7 +143,6 @@ fjs = (_) ->
   # we want to re-export these as a part of fjs. They come from underscore because it's there
   # underscore has the arguments in the wrong order. In order to do point-free functional programming we need to have the functions take their data last
   memoize = _.memoize
-  compose = _.compose
 
   # these have optional arguments. flip by hand
   # example:
@@ -144,6 +160,8 @@ fjs = (_) ->
   sortBy  = curry (iterator, list) -> _.sortBy list, iterator
   groupBy = curry (iterator, list) -> _.groupBy list, iterator
   invoke  = curry (iterator, list) -> _.invoke list, iterator
+  any  = curry (iterator, list) -> _.any list, iterator
+  all  = curry (iterator, list) -> _.all list, iterator
 
   indexOf = curry (value, list) -> _.indexOf list, value
   sort    = (list) -> list.concat().sort()
@@ -155,7 +173,8 @@ fjs = (_) ->
   last = _.last
   tail = rest = _.rest
 
-  us = {find, map, filter, reduce, memoize, compose, min, max, each, head, first, last, tail, rest, sortBy, groupBy, invoke, indexOf, sort}
+  us = {find, map, filter, reduce, memoize, compose, min, max, each, head, first, last, tail, rest, sortBy, groupBy, invoke, indexOf, sort, any, all}
+
 
 
 
@@ -168,8 +187,19 @@ fjs = (_) ->
 
   arrays = {reverse, take}
 
+
+
+  ## HELPERS
+  isUndefined = (x) -> not x?
+  anyUndefined = any isUndefined
+
+
   # export!
   _.extend functions, objects, basics, us, arrays, debug, flow
+
+
+
+
 
 if define?.amd?
   define(['underscore'], (_) -> fjs _)

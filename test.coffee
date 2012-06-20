@@ -26,6 +26,15 @@ describe 'fjs', ->
       henry.getName = fjs.method name
       assert.equal henry.getName(), "henry"
 
+  describe 'compose', ->
+    it 'should throw an error if function is null', ->
+      two = (thing) -> thing + "!"
+      try
+        stuff = fjs.compose two, one
+      catch e
+        err = e
+      one = -> "one"
+      assert.ok err, "no compose error"
 
   describe 'chain', ->
     it 'should work like compose', ->
@@ -40,6 +49,14 @@ describe 'fjs', ->
       chainValue = fjs.chain(first, name)(items)
       assert.equal chainValue, "sean", "chain incorrect"
 
+    it 'should throw an error if function is null', ->
+      two = (thing) -> thing + "!"
+      try
+        stuff = fjs.chain two, one
+      catch e
+        err = e
+      one = -> "one"
+      assert.ok err, "no chain compose null error"
 
   describe 'series', ->
     it 'should do multiple async methods', (done) ->
@@ -98,6 +115,27 @@ describe 'fjs', ->
         assert.equal data.id, "bob"
         assert.equal data.message, "hi bob"
         done()
+
+    it 'should scream if any methods do not exist in make series', (done) ->
+      hello = (name, cb) -> cb null, ("hello, "+name)
+
+      try
+        doStuff = fjs.makeSeries asdf, hello
+      catch e
+        err = e
+
+      assert.ok err, "should have thrown error"
+      asdf = (cb) -> cb null, "asdf"
+      done()
+
+    it 'should return error if any methods do not exist in series', (done) ->
+      hello = (name, cb) -> cb null, ("hello, "+name)
+
+      fjs.series asdf, hello, (err, data) ->
+        assert.ok err, 'no error'
+        done()
+
+      asdf = (cb) -> cb null, "asdf"
 
   describe 'call', ->
     it 'should call functions on the object', ->

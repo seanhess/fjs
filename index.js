@@ -4,7 +4,7 @@
     __slice = [].slice;
 
   fjs = function(_) {
-    var add, arrays, basics, call, chain, compose, curry, debug, div, each, eq, filter, find, first, flip, flow, functions, get, groupBy, gt, gte, head, id, indexOf, invoke, last, log, lt, lte, makeSeries, map, max, memoize, method, min, mult, negate, objects, reduce, rest, reverse, series, set, sort, sortBy, sub, tail, take, toAsync, us;
+    var add, all, any, anyUndefined, arrays, basics, call, chain, compose, curry, debug, div, each, eq, filter, find, first, flip, flow, functions, get, groupBy, gt, gte, head, id, indexOf, invoke, isUndefined, last, log, lt, lte, makeSeries, map, max, memoize, method, min, mult, negate, objects, reduce, rest, reverse, series, set, sort, sortBy, sub, tail, take, toAsync, us;
     curry = function(f) {
       var call;
       call = function() {
@@ -49,6 +49,14 @@
         return func.apply(null, [this].concat(__slice.call(args)));
       };
     };
+    compose = function() {
+      var funcs;
+      funcs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
+      if (anyUndefined(funcs)) {
+        throw new Error("null function in compose");
+      }
+      return _.compose.apply(_, funcs);
+    };
     chain = function() {
       var funcs;
       funcs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
@@ -65,6 +73,9 @@
       var funcs, index, nextInSeries;
       funcs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
       index = 0;
+      if (anyUndefined(funcs)) {
+        throw new Error("null function in series");
+      }
       return nextInSeries = function() {
         var args, cb, func, _i;
         args = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), cb = arguments[_i++];
@@ -85,7 +96,11 @@
     series = function() {
       var cb, funcs, seriesChain, _i;
       funcs = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), cb = arguments[_i++];
-      seriesChain = makeSeries.apply(null, funcs);
+      try {
+        seriesChain = makeSeries.apply(null, funcs);
+      } catch (err) {
+        return cb(err);
+      }
       return seriesChain(cb);
     };
     toAsync = function(f) {
@@ -178,7 +193,6 @@
       negate: negate
     };
     memoize = _.memoize;
-    compose = _.compose;
     find = curry(function(iterator, list) {
       return _.find(list, iterator);
     });
@@ -205,6 +219,12 @@
     });
     invoke = curry(function(iterator, list) {
       return _.invoke(list, iterator);
+    });
+    any = curry(function(iterator, list) {
+      return _.any(list, iterator);
+    });
+    all = curry(function(iterator, list) {
+      return _.all(list, iterator);
     });
     indexOf = curry(function(value, list) {
       return _.indexOf(list, value);
@@ -237,7 +257,9 @@
       groupBy: groupBy,
       invoke: invoke,
       indexOf: indexOf,
-      sort: sort
+      sort: sort,
+      any: any,
+      all: all
     };
     reverse = function(arr) {
       return arr.concat().reverse();
@@ -249,6 +271,10 @@
       reverse: reverse,
       take: take
     };
+    isUndefined = function(x) {
+      return !(x != null);
+    };
+    anyUndefined = any(isUndefined);
     return _.extend(functions, objects, basics, us, arrays, debug, flow);
   };
 
