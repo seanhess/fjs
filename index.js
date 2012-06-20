@@ -70,16 +70,15 @@
       chain: chain
     };
     makeSeries = function() {
-      var funcs, index, nextInSeries;
+      var funcs, nextInSeries, start;
       funcs = 1 <= arguments.length ? __slice.call(arguments, 0) : [];
-      index = 0;
       if (anyUndefined(funcs)) {
         throw new Error("null function in series");
       }
-      return nextInSeries = function() {
-        var args, cb, func, _i;
-        args = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), cb = arguments[_i++];
-        func = funcs[index++];
+      nextInSeries = function() {
+        var args, cb, func, index, _i;
+        args = 3 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 2) : (_i = 0, []), index = arguments[_i++], cb = arguments[_i++];
+        func = funcs[index];
         if (!(func != null)) {
           return cb.apply(null, [null].concat(__slice.call(args)));
         }
@@ -89,8 +88,13 @@
           if (err != null) {
             return cb(err);
           }
-          return nextInSeries.apply(null, __slice.call(args).concat([cb]));
+          return nextInSeries.apply(null, __slice.call(args).concat([index + 1], [cb]));
         }]));
+      };
+      return start = function() {
+        var args, cb, _i;
+        args = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), cb = arguments[_i++];
+        return nextInSeries.apply(null, __slice.call(args).concat([0], [cb]));
       };
     };
     series = function() {
@@ -104,6 +108,9 @@
       return seriesChain(cb);
     };
     toAsync = function(f) {
+      if (!(f != null)) {
+        return null;
+      }
       return function() {
         var args, cb, _i;
         args = 2 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 1) : (_i = 0, []), cb = arguments[_i++];

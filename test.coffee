@@ -137,6 +137,21 @@ describe 'fjs', ->
 
       asdf = (cb) -> cb null, "asdf"
 
+    it 'can be called twice', (done) ->
+      one = (name, cb) -> cb null, "hi #{name}"
+      two = (msg, cb) -> cb null, msg+"!"
+      both = fjs.makeSeries one, two
+
+      both "sean", (err, msg) ->
+        assert.ifError err
+        assert.equal msg, "hi sean!"
+
+        both "bob", (err, msg) ->
+          assert.ifError err
+          assert.equal msg, "hi bob!", "strange results on call twice"
+          done()
+
+
   describe 'call', ->
     it 'should call functions on the object', ->
       obj =

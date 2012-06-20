@@ -58,16 +58,17 @@ fjs = (_) ->
   # uses async library, but functions don't require arrays
   # also allows you to CREATE a series
   makeSeries = (funcs...) ->
-    index = 0
-
     if anyUndefined funcs then throw new Error "null function in series"
 
-    nextInSeries = (args..., cb) ->
-      func = funcs[index++]
+    nextInSeries = (args..., index, cb) ->
+      func = funcs[index]
       if not func? then return cb null, args...
       func args..., (err, args...) ->
         if err? then return cb err
-        nextInSeries args..., cb
+        nextInSeries args..., (index+1), cb
+
+    start = (args..., cb) ->
+      nextInSeries args..., 0, cb
 
   # make a series and call it immediately
   # TODO is there a way to automatically detect this, like curry does?
@@ -82,6 +83,7 @@ fjs = (_) ->
     seriesChain cb
 
   toAsync = (f) ->
+    if not f? then return null
     (args..., cb) ->
       process.nextTick ->
         res = f args...
