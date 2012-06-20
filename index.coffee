@@ -70,7 +70,7 @@ fjs = (_) ->
         res = f args...
         cb null, res
 
-  async = {series, makeSeries, toAsync}
+  flow = {series, makeSeries, toAsync}
 
 
   ## OBJECTS 
@@ -169,7 +169,7 @@ fjs = (_) ->
   arrays = {reverse, take}
 
   # export!
-  _.extend functions, objects, basics, us, arrays, debug, async
+  _.extend functions, objects, basics, us, arrays, debug, flow
 
 if define?.amd?
   define(['underscore'], (_) -> fjs _)

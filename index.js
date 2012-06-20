@@ -4,7 +4,7 @@
     __slice = [].slice;
 
   fjs = function(_) {
-    var add, arrays, async, basics, call, chain, compose, curry, debug, div, each, eq, filter, find, first, flip, functions, get, groupBy, gt, gte, head, id, indexOf, invoke, last, log, lt, lte, makeSeries, map, max, memoize, method, min, mult, negate, objects, reduce, rest, reverse, series, set, sort, sortBy, sub, tail, take, toAsync, us;
+    var add, arrays, basics, call, chain, compose, curry, debug, div, each, eq, filter, find, first, flip, flow, functions, get, groupBy, gt, gte, head, id, indexOf, invoke, last, log, lt, lte, makeSeries, map, max, memoize, method, min, mult, negate, objects, reduce, rest, reverse, series, set, sort, sortBy, sub, tail, take, toAsync, us;
     curry = function(f) {
       var call;
       call = function() {
@@ -99,7 +99,7 @@
         });
       };
     };
-    async = {
+    flow = {
       series: series,
       makeSeries: makeSeries,
       toAsync: toAsync
@@ -249,7 +249,7 @@
       reverse: reverse,
       take: take
     };
-    return _.extend(functions, objects, basics, us, arrays, debug, async);
+    return _.extend(functions, objects, basics, us, arrays, debug, flow);
   };
 
   if ((typeof define !== "undefined" && define !== null ? define.amd : void 0) != null) {
