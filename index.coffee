@@ -50,25 +50,12 @@ fjs = (_) ->
   # also allows you to CREATE a series
   makeSeries = (funcs...) ->
     index = 0
-
-    callAsync = (func, args, cb) ->
+    nextInSeries = (args..., cb) ->
+      func = funcs[index++]
+      if not func? then return cb null, args...
       func args..., (err, args...) ->
         if err? then return cb err
         nextInSeries args..., cb
-
-    callSync = (func, args, cb) ->
-      result = func args...
-      nextInSeries result, cb
-
-    nextInSeries = (args..., cb) ->
-      func = funcs[index++]
-      # console.log "CALLING", func?, args
-      if not func? then return cb null, args...
-
-      if func.length is args.length
-        callSync func, args, cb
-      else
-        callAsync func, args, cb
 
   # make a series and call it immediately
   # TODO is there a way to automatically detect this, like curry does?
@@ -77,7 +64,13 @@ fjs = (_) ->
     seriesChain = makeSeries funcs...
     seriesChain cb
 
-  async = {series, makeSeries}
+  toAsync = (f) ->
+    (args..., cb) ->
+      process.nextTick ->
+        res = f args...
+        cb null, res
+
+  async = {series, makeSeries, toAsync}
 
 
   ## OBJECTS 

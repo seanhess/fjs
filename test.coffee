@@ -57,7 +57,7 @@ describe 'fjs', ->
       getData = () -> "bob"
       getDetails = (id) -> {id: id, message: "hi " + id}
 
-      fjs.series getData, getDetails, (err, data) ->
+      fjs.series fjs.toAsync(getData), fjs.toAsync(getDetails), (err, data) ->
         assert.ifError err
         assert.ok data
         assert.equal data.id, "bob"
@@ -73,15 +73,21 @@ describe 'fjs', ->
         assert.ok !data
         done()
 
-    it 'should work with curry', ->
-      asyncAdd = curry (n, num, cb) -> cb null, num+n
-      mult = curry (n, num) -> num*n
-      myMethod = fjs.series asyncAdd(2), mult(2), (err, num) ->
+    it 'should work with curry', (done) ->
+
+      asyncAdd = curry (n, num, cb) ->
+        cb null, num+n
+
+      mult = curry (n, num) ->
+        num*n
+
+      fjs.series asyncAdd(2, 2), fjs.toAsync(mult(2)), (err, num) ->
         assert.ifError err
         assert.equal num, 8
         done()
 
     it 'should behave like compose and let you make one for use later', (done) ->
+      console.log "NEXT"
       getData = (cb) -> process.nextTick -> cb null, "bob"
       getDetails = (id, cb) -> process.nextTick -> cb null, {id: id, message: "hi " + id}
 
