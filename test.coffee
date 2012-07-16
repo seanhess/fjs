@@ -104,7 +104,6 @@ describe 'fjs', ->
         done()
 
     it 'should behave like compose and let you make one for use later', (done) ->
-      console.log "NEXT"
       getData = (cb) -> process.nextTick -> cb null, "bob"
       getDetails = (id, cb) -> process.nextTick -> cb null, {id: id, message: "hi " + id}
 
@@ -150,6 +149,22 @@ describe 'fjs', ->
           assert.ifError err
           assert.equal msg, "hi bob!", "strange results on call twice"
           done()
+
+
+    it 'should be ok if functions dont return as many args as expected', (done) ->
+      findUser = curry (userId, cb) ->
+        cb null
+
+      userAge = (user, cb) ->
+        assert.ok (typeof user != "function"), "returned a function instead of the object"
+        cb null, user?.age
+
+      cb = (err, age) ->
+        assert.ifError err
+        assert.ok !age?
+        done()
+
+      fjs.series findUser("asdf"), userAge, cb
 
 
   describe 'call', ->

@@ -63,6 +63,14 @@ fjs = (_) ->
     nextInSeries = (args..., index, cb) ->
       func = funcs[index]
       if not func? then return cb null, args...
+
+      # IF func has a good arglist, trust it intsead of trusting args...
+      # for example, if someone returns cb(null) when the next function expects: (obj, cb) ->
+      # we know we want to set obj to null, not put cb in the first position
+      if func.length > 1
+        while args.length < (func.length - 1)
+          args.push null
+
       func args..., (err, args...) ->
         if err? then return cb err
         nextInSeries args..., (index+1), cb

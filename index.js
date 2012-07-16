@@ -82,6 +82,11 @@
         if (!(func != null)) {
           return cb.apply(null, [null].concat(__slice.call(args)));
         }
+        if (func.length > 1) {
+          while (args.length < (func.length - 1)) {
+            args.push(null);
+          }
+        }
         return func.apply(null, __slice.call(args).concat([function() {
           var args, err;
           err = arguments[0], args = 2 <= arguments.length ? __slice.call(arguments, 1) : [];
