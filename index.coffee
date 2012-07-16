@@ -23,10 +23,12 @@ fjs = (_) ->
           call innerArgs...
         inner.name = f.name
         inner.toString = -> f.toString()
+        inner.curryLength = f.length - args.length # the final length - num of curried arguments
         return inner
 
     call.name = f.name
     call.toString = -> f.toString()
+    call.curryLength = f.length
     return call
 
   # flips the arguments of a function
@@ -61,14 +63,17 @@ fjs = (_) ->
     if anyUndefined funcs then throw new Error "null function in series"
 
     nextInSeries = (args..., index, cb) ->
+
       func = funcs[index]
+
       if not func? then return cb null, args...
 
       # IF func has a good arglist, trust it intsead of trusting args...
       # for example, if someone returns cb(null) when the next function expects: (obj, cb) ->
       # we know we want to set obj to null, not put cb in the first position
-      if func.length > 1
-        while args.length < (func.length - 1)
+      length = func.curryLength ? func.length
+      if length > 1
+        while args.length < (length - 1)
           args.push null
 
       func args..., (err, args...) ->

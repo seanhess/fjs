@@ -166,6 +166,26 @@ describe 'fjs', ->
 
       fjs.series findUser("asdf"), userAge, cb
 
+    it 'should be ok if functions dont return as many args as expected, when the functions are curried', (done) ->
+      findUser = curry (userId, cb) ->
+        cb null
+
+      addUserInfo = curry (comment, user, cb) ->
+        comment.name = user?.name
+        cb null, comment
+
+      cb = (err, comment) ->
+        assert.ifError err
+        assert.ok comment
+        assert.equal comment.text, "HI"
+        assert.ok !comment.name?
+        done()
+
+      comment =
+        text: "HI"
+
+      fjs.series findUser("asdf"), addUserInfo(comment), cb
+
 
   describe 'call', ->
     it 'should call functions on the object', ->

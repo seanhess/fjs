@@ -23,6 +23,7 @@
           inner.toString = function() {
             return f.toString();
           };
+          inner.curryLength = f.length - args.length;
           return inner;
         }
       };
@@ -30,6 +31,7 @@
       call.toString = function() {
         return f.toString();
       };
+      call.curryLength = f.length;
       return call;
     };
     flip = function(f) {
@@ -76,14 +78,15 @@
         throw new Error("null function in series");
       }
       nextInSeries = function() {
-        var args, cb, func, index, _i;
+        var args, cb, func, index, length, _i, _ref;
         args = 3 <= arguments.length ? __slice.call(arguments, 0, _i = arguments.length - 2) : (_i = 0, []), index = arguments[_i++], cb = arguments[_i++];
         func = funcs[index];
         if (!(func != null)) {
           return cb.apply(null, [null].concat(__slice.call(args)));
         }
-        if (func.length > 1) {
-          while (args.length < (func.length - 1)) {
+        length = (_ref = func.curryLength) != null ? _ref : func.length;
+        if (length > 1) {
+          while (args.length < (length - 1)) {
             args.push(null);
           }
         }
