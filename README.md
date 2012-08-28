@@ -48,6 +48,11 @@ The syntax looks best in coffeescript, because you can just prefix a function de
     assert.deepEqual [1,2,3].map(add(2)), [3,4,5]
 
 
+You can also use `curry` on a whole module, making it easy to work with functions that haven't been declared as curried. It curry any module functions it finds. Since curry doesn't have any effect when the function is called with all arguments, it doens't hurt anything to do this. 
+
+    math = curry require('math')
+    add2 = math.add(2)
+
 #### Simple Stuff
 
 We need some simple functions so we can call object actions as functions instead of doing it with a "."

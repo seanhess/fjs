@@ -9,6 +9,10 @@ fjs = (_) ->
   # it will turn add = (a,b) -> a+b into add = (a) -> (b) -> a+b
   # so you can call #2 with add(2)(4)
   curry = (f) ->
+
+    if not _.isFunction f
+      return curryModule f
+
     call = (args...) ->
 
       # if we have at least as many arguments as our f supports
@@ -30,6 +34,16 @@ fjs = (_) ->
     call.toString = -> f.toString()
     call.curryLength = f.length
     return call
+
+  # curries every function on the module
+  curryModule = (module) ->
+    module = _.clone module
+
+    for name, value of module
+      if _.isFunction value
+        module[name] = curry value
+
+    return module
 
   # flips the arguments of a function
   flip = (f) -> (args...) -> f(args.reverse()...)

@@ -19,6 +19,17 @@ describe 'fjs', ->
       assert.equal add(2,3), 5
       assert.equal add2(3), 5
 
+    it 'should curry a module with functions', ->
+      module =
+        add: (a, b) -> a + b
+
+      curried = curry module
+      assert.ok curried.add, "didn't copy functions"
+      add2 = curried.add(2)
+      assert.equal add2(3), curried.add(2,3)
+      assert.equal add2(3), module.add(2,3)
+
+
   describe 'method', ->
     it 'should call something with this', ->
       name = (obj) -> obj.name

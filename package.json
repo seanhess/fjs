@@ -2,10 +2,12 @@
   "author": "Sean Hess <sean@i.tv> (http://seanhess.github.com)",
   "name": "fjs",
   "description": "Utilities for Functional Javascript",
-  "version": "0.4.5",
+  "version": "0.5.0",
   "homepage": "http://github.com/idottv/fjs",
+  "license": "BSD",
   "scripts": {
-    "test":"node_modules/.bin/coffee -c index.coffee && node_modules/.bin/mocha -R spec --compilers coffee:coffee-script test.coffee"
+    "test": "node_modules/.bin/mocha -R spec --compilers coffee:coffee-script test.coffee",
+    "prepublish": "node_modules/.bin/coffee -c index.coffee"
   },
   "repository": {
     "type": "git",
