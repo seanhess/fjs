@@ -10,6 +10,9 @@ call = fjs.call
 curry = fjs.curry
 
 describe 'fjs', ->
+  
+  it 'should fail', ->
+    assert.fail "OH NO"
 
   describe 'curry', ->
     it 'should curry sum', ->
