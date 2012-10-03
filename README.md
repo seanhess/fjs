@@ -2,6 +2,8 @@
 
 Functional Utilties for Javascript.
 
+[![Build Status](https://secure.travis-ci.org/idottv/fjs.png)](http://travis-ci.org/idottv/fjs)
+
 ### Reasons
 
 See this talk for motivation and some good examples. http://www.slideshare.net/drboolean/pointfree-functional-programming-in-javascript [Code Samples](https://github.com/DrBoolean/PointfreeJSTalk)
