@@ -11,6 +11,7 @@ curry = fjs.curry
 
 describe 'fjs', ->
 
+
   describe 'curry', ->
     it 'should curry sum', ->
       add = curry (a, b) -> a + b
