@@ -30,6 +30,17 @@ describe 'fjs', ->
       assert.equal add2(3), curried.add(2,3)
       assert.equal add2(3), module.add(2,3)
 
+    it 'should save context on methods', ->
+      class Adder
+        constructor: ->
+          @property = "me"
+
+        add: curry (a, b, c) ->
+          return "#{a} #{b} #{c} #{@property}"
+
+      adder = new Adder()
+      result = adder.add(5)(3)(2)
+      assert.equal "5 3 2 me", result
 
   describe 'method', ->
     it 'should call something with this', ->
@@ -222,7 +233,7 @@ describe 'fjs', ->
       obj = echo: (a) -> a
       echoHi = call 'echo', 'hi'
       assert.equal echoHi(obj), 'hi', 'did not apply arguments'
-      
+
   describe 'objects', ->
     it 'should get and set', ->
       obj = {name: 'sean'}

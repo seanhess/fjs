@@ -13,12 +13,17 @@ fjs = (_) ->
     if not _.isFunction f
       return curryModule f
 
+    context = null
+
     call = (args...) ->
 
+      # the first time 'call' is run will have the correct context, so save it for later the first time it runs
+      context = this if !context
+
       # if we have at least as many arguments as our f supports
-      # then call it
+      # then call it with the correct context
       if args.length >= f.length
-        f args...
+        f.apply context, args
 
       # otherwise, return a function with the arguments partially applied
       else
@@ -56,12 +61,12 @@ fjs = (_) ->
     (args...) ->
       func(this, args...)
 
-  # custom compose. need to make sure it throws errors if a funciton is undefined
+  # custom compose. need to make sure it throws errors if a function is undefined
   compose = (funcs...) ->
     if anyUndefined funcs then throw new Error "null function in compose"
     _.compose funcs...
 
-  # like compose, but backwards. So the first method on the left is the 1st one called. 
+  # like compose, but backwards. So the first method on the left is the 1st one called.
   # easier for most people to understand
   chain = (funcs...) -> compose funcs.reverse()...
 
@@ -82,7 +87,7 @@ fjs = (_) ->
 
       if not func? then return cb null, args...
 
-      # IF func has a good arglist, trust it intsead of trusting args...
+      # IF func has a good arglist, trust it instead of trusting args...
       # for example, if someone returns cb(null) when the next function expects: (obj, cb) ->
       # we know we want to set obj to null, not put cb in the first position
       length = func.curryLength ? func.length
@@ -119,8 +124,8 @@ fjs = (_) ->
   flow = {series, makeSeries, toAsync}
 
 
-  ## OBJECTS 
-  # functional eqivalents to object-y stuff
+  ## OBJECTS
+  # functional equivalents to object-y stuff
   # you only need these so you can write point-free and compose
   # example
     # getName = get 'name'
@@ -130,7 +135,7 @@ fjs = (_) ->
     obj[name] = value
     return obj
 
-  # Call a function on an object. 
+  # Call a function on an object.
   # curry this by hand, since curry doesn't work with optional arguments. Note that you can only curry this once!
   # example
     # woot = call 'woot'
@@ -177,7 +182,7 @@ fjs = (_) ->
   # example:
     # add2 = (item) -> item + 2
     # underscore version: map [1,2,3], add2
-    # fjs version: 
+    # fjs version:
       # map add2, [1,2,3]
       # add2ToEverything = map add2 <--- not possible in underscore
   find    = curry (iterator, list) -> _.find list, iterator
