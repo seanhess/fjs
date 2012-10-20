@@ -3,7 +3,7 @@
   "name": "fjs",
   "description": "Utilities for Functional Javascript",
   "version": "0.5.2",
-  "homepage": "http://github.com/idottv/fjs",
+  "homepage": "http://github.com/seanhess/fjs",
   "license": "BSD",
   "scripts": {
     "test": "node_modules/.bin/mocha -R spec --compilers coffee:coffee-script test.coffee",
@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:idottv/fjs.git"
+    "url": "git@github.com:seanhess/fjs.git"
   },
   "dependencies": {
     "coffee-script": "1.3.1",
