@@ -1,6 +1,6 @@
 {
   "name": "fjs",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "dependencies": {
     "underscore": "git://github.com/documentcloud/underscore.git#1.4.2"
   }
